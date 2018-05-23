@@ -1,0 +1,1 @@
+This project utilizes a Cloudant database server hosted on IBM cloud, however, these MapReduce scripts are compatible with CouchDB, on which Cloudant is based. The scripts in this project define a view's map and reduce functions which give us the useful statistics we need from the collected data.
