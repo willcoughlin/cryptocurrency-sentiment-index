@@ -38,7 +38,7 @@ def search_and_analyze(api, analyzer, symb, name):
 
 
 # Load top 25 from file
-with open('top_25.csv' 'r') as f:
+with open('top_25.csv', 'r') as f:
     freader = csv.reader(f)
     top_25 = [(row[0], row[1]) for row in freader]
 
