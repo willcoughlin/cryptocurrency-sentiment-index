@@ -1,0 +1,35 @@
+.navbar {
+  padding-left: 50px;
+  padding-right: 50px;
+}
+
+.navbar-brand:hover {
+  text-decoration: underline;
+}
+
+/* Navbar button styles */
+.nav-item {
+  padding-right: 10px;
+}
+.navbar-nav .active {
+  background-color: transparent;
+}
+.show .nav-item {
+  margin-bottom: 5px;  
+}
+  .nav-link {
+    display: inline-block;
+    padding: 2px;
+    width: 100%
+  }
+  .btn-outline-primary:focus, .btn-outline-primary:hover {
+    border: rgb(0, 123, 255) solid 1px;
+    border-radius: 4px;
+  }
+  .btn-outline-secondary:hover {
+    border: white solid 1px;
+    color: white;
+  }
+  .btn-outline-secondary:focus {
+    border: #6c757d solid 1px;
+  }

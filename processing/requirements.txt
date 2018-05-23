@@ -1,0 +1,14 @@
+certifi==2018.4.16
+chardet==3.0.4
+cloudant==2.8.1
+coinmarketcap==5.0.3
+idna==2.6
+oauthlib==2.0.7
+PySocks==1.6.8
+requests==2.18.4
+requests-cache==0.4.13
+requests-oauthlib==0.8.0
+tweepy==3.6.0
+Unidecode==1.0.22
+urllib3==1.22
+vaderSentiment==3.2.1
