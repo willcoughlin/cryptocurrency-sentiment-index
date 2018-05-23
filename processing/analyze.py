@@ -22,7 +22,7 @@ def clean_text(text):
 
 def is_not_retweeted(tweet):
     """ Returns true if tweet is a retweet, false otherwise """
-    return (not tweet.retweeted) and ('RT @' not in tweet.text) 
+    return (not tweet.retweeted) and ('RT @' not in tweet.text)
 
 def search_and_analyze(api, analyzer, symb, name):
     query = '{} OR {}'.format(symb, name)
@@ -38,16 +38,16 @@ def search_and_analyze(api, analyzer, symb, name):
 
 
 # Load top 25 from file
-with open(config.SAVE_FILE, 'r') as f:
+with open('top_25.csv' 'r') as f:
     freader = csv.reader(f)
     top_25 = [(row[0], row[1]) for row in freader]
 
 # Authorize tweepy
 auth = OAuthHandler(
-    TWEEPY_CONFIG['CONSUMER_KEY'], 
+    TWEEPY_CONFIG['CONSUMER_KEY'],
     TWEEPY_CONFIG['CONSUMER_SECRET']
 )
-auth.set_access_token(    
+auth.set_access_token(
     TWEEPY_CONFIG['ACCESS_TOKEN'],
     TWEEPY_CONFIG['ACCESS_TOKEN_SECRET']
 )
@@ -58,12 +58,12 @@ analyzer = SentimentIntensityAnalyzer()
 
 # Connect to database
 conn = cloudant.Cloudant(
-    CLOUDANT_CONFIG['USER'], 
+    CLOUDANT_CONFIG['USER'],
     CLOUDANT_CONFIG['PASS'],
     url=CLOUDANT_CONFIG['HOST'],
     connect=True
 )
-db = conn['sentiment']
+db = conn['sentiments']
 
 total = 0
 for coin in top_25:
@@ -72,7 +72,8 @@ for coin in top_25:
     # search for and analyze tweets regarding current currency
     tweets = search_and_analyze(api, analyzer, symb, name)
     for t in tweets:
-        print('Adding record: ' + str(t) + '... ', end='')
+        dt = datetime.utcnow()
+        print('[{}] Adding record: {}... '.format(str(dt), str(t)))
         data = {
             'datetime': t[0],
             'symbol': t[1],
@@ -84,10 +85,12 @@ for coin in top_25:
             time.sleep(1)
 
         tweet_doc = db.create_document(data)
+        dt = datetime.utcnow()
         if tweet_doc.exists():
-            print('SUCCESS')
+            print('[{}] SUCCESS'.format(str(dt)))
             total += 1
         else:
-            print('FAIL')
+            print('[{}] FAIL'.format(str(dt)))
 
-print('Total records inserted: ' + str(total))
+dt = datetime.utcnow()
+print('[{}] Total records inserted: {}'.format(str(dt), str(total)))
