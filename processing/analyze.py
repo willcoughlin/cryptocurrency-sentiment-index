@@ -2,6 +2,7 @@
 
 import cloudant
 import csv
+import logging
 import re
 import time
 import tweepy
@@ -12,6 +13,11 @@ from unidecode import unidecode
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 
 import config
+
+# Define log output file
+LOG_FILE = 'top_25.log'
+
+config.configure_logging(LOG_FILE)
 
 # Function defs
 
@@ -78,8 +84,7 @@ for coin in top_25:
     # search for and analyze tweets regarding current currency
     tweets = search_and_analyze(api, analyzer, symb, name)
     for t in tweets:
-        dt = datetime.utcnow()
-        print('[{}] Adding record: {}... '.format(str(dt), str(t)))
+        logging.info('Adding record: %s...', str(t))
         data = {
             'datetime': t[0],
             'symbol': t[1],
@@ -93,10 +98,9 @@ for coin in top_25:
         tweet_doc = db.create_document(data)
         dt = datetime.utcnow()
         if tweet_doc.exists():
-            print('[{}] SUCCESS.'.format(str(dt)))
+            logging.info('SUCCESS.')
         else:
-            print('[{}] FAIL.'.format(str(dt)))
+            logging.error('FAILED.')
         total += 1
 
-dt = datetime.utcnow()
-print('[{}] Total records inserted: {}'.format(str(dt), str(total)))
+logging.info('Total records inserted: %d', total)

@@ -2,13 +2,19 @@
 
 import cloudant
 import json
+import logging
 import time
 import math
 from cloudant.design_document import DesignDocument, View
 from cloudant.query import Query
-from datetime import date, datetime
+from datetime import date
 
 import config
+
+# Define log output file
+LOG_FILE = 'summary.log'
+
+config.configure_logging(LOG_FILE)
 
 # Connect to server
 with open(config.cloudant_credentials_File, 'r') as f:
@@ -30,7 +36,7 @@ view_results = view(group=True)['rows']
 # switch to summaries db
 db = conn['summaries']
 
-i = 0
+total = 0
 for view_result in view_results:
     symbol = view_result['key']
     unix_date = int(time.mktime(date.today().timetuple()))
@@ -49,44 +55,39 @@ for view_result in view_results:
         
         # check that summary is new
         if record['date'] == unix_date:
-            dt = datetime.utcnow()
-            print('[{}] Record for {} is current -- SKIPPING.'.format(str(dt), symbol))
-            continue
+            logging.info('Record for %s is current - SKIPPING.', symbol)
+        else:
+            logging.info('Updating summary for %s', symbol)
 
-        dt = datetime.utcnow()
-        print('[{}] Updating summary for {}...'.format(str(dt), symbol))
+            today_summary = view_result['value']
 
-        today_summary = view_result['value']
+            # update sample size
+            summary['sampleSize'] += today_summary['sampleSize']
 
-        # update sample size
-        summary['sampleSize'] += today_summary['sampleSize']
+            # add sums
+            summary['sum'] += today_summary['sum']
+            summary['sumSq'] += today_summary['sumSq']
 
-        # add sums
-        summary['sum'] += today_summary['sum']
-        summary['sumSq'] += today_summary['sumSq']
+            # update min/max if needed
+            if today_summary['min'] < summary['min']:
+                summary['min'] = today_summary['min']
+            if today_summary['max'] > summary['max']:
+                summary['max'] = today_summary['max']
 
-        # update min/max if needed
-        if today_summary['min'] < summary['min']:
-            summary['min'] = today_summary['min']
-        if today_summary['max'] > summary['max']:
-            summary['max'] = today_summary['max']
+            # update mean
+            summary['mean'] = summary['sum'] / summary['sampleSize']
 
-        # update mean
-        summary['mean'] = summary['sum'] / summary['sampleSize']
+            # update variance
+            sst = summary['sumSq'] - summary['sum']**2 / summary['sampleSize']
+            variance = sst / (summary['sampleSize'] - 1)
+            summary['stdDev'] = math.sqrt(variance)
 
-        # update variance
-        sst = summary['sumSq'] - summary['sum']**2 / summary['sampleSize']
-        variance = sst / (summary['sampleSize'] - 1)
-        summary['stdDev'] = math.sqrt(variance)
-
-        # save changes
-        summary.save()
-        dt = datetime.utcnow()
-        print('[{}] SUCCESS.'.format(str(dt)))
+            # save changes
+            summary.save()
+            logging.info('SUCCESS.')
     else:
         # Creating a new summary
-        dt = datetime.utcnow()
-        print('[{}] Creating summary for {}...'.format(str(dt), symbol))
+        logging.info('Creating summary for %s...', symbol)
         data = {
             'date': unix_date,
             'symbol': symbol,
@@ -94,13 +95,9 @@ for view_result in view_results:
         }
         new_summary = db.create_document(data)
         if new_summary.exists():
-            dt = datetime.utcnow()
-            print('[{}] SUCCESS.'.format(str(dt)))
+            logging.info('SUCCESS.')
         else:
-            dt = datetime.utcnow()            
-            print('[{}] SUCCESS.'.format(str(dt)))
+            logging.error('FAILED.')
 
     # don't exceed rate limit
-    i += 1
-    if (i - 1) % 5 == 0:
-        time.sleep(1)
+    time.sleep(1)
