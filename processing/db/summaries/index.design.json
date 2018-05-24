@@ -1,0 +1,29 @@
+{
+    "_id": "_design/index",
+    "_rev": "1-91f17c75f8fc045dddedf21cff3e964d",
+    "language": "query",
+    "indexes": {
+      "symbol-text": {
+        "index": {
+          "default_analyzer": "keyword",
+          "default_field": {},
+          "partial_filter_selector": {},
+          "selector": {},
+          "fields": [
+            {
+              "name": "symbol",
+              "type": "string"
+            }
+          ],
+          "index_array_lengths": true
+        },
+        "analyzer": {
+          "name": "perfield",
+          "default": "keyword",
+          "fields": {
+            "$default": "standard"
+          }
+        }
+      }
+    }
+  }

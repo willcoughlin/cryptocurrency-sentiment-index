@@ -1,0 +1,11 @@
+{
+    "_id": "_design/summary",
+    "_rev": "15-3663b55aff1664a8520d143d44a9cb1f",
+    "views": {
+      "summary-view": {
+        "reduce": "function (keys, values, rereduce) {\n  var max = 0;\n  var min = Infinity;\n  var sampleSize = 0;\n  var sum = 0;\n  var sumSq = 0;\n  \n  if (rereduce) {\n    for (var i in values) {\n      sampleSize += values[i].sampleSize;\n      max = values[i].max > max ? values[i].max : max;\n      min = values[i].min < min ? values[i].min : min;\n      sum += values[i].sum;\n      sumSq += values[i].sumSq;\n    }\n  } else {\n    sampleSize = values.length;\n    for (var i in values) {\n      max = values[i] > max ? values[i] : max;\n      min = values[i] < min ? values[i] : min;\n      sum += values[i];\n      sumSq += Math.pow(values[i], 2);\n    }\n  }\n  \n  var mean = sum / sampleSize;\n  \n  var variance = (sumSq - Math.pow(sum, 2) / sampleSize) / (sampleSize - 1);\n  var stdDev = Math.sqrt(variance);\n  \n  return {\n    \"sampleSize\": sampleSize,\n    \"max\": max,\n    \"min\": min,\n    \"sum\": sum,\n    \"sumSq\": sumSq,\n    \"mean\" : mean,\n    \"stdDev\": stdDev\n  };\n}",
+        "map": "function (doc) {\n  emit(doc.symbol, doc.sentiment);\n}"
+      }
+    },
+    "language": "javascript"
+  }
