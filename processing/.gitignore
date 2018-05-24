@@ -1,4 +1,5 @@
 __pycache__
-top_25.csv
 vscode-requirements.txt
+*.csv
 *.credentials.json
+*.log
