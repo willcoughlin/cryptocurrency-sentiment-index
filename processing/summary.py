@@ -1,20 +1,24 @@
 """ Get summary statistics from a view in the sentiments db. """
 
 import cloudant
-from cloudant.design_document import DesignDocument, View
-from cloudant.query import Query
-from config import CLOUDANT_CONFIG
-from datetime import date, datetime
+import json
 import time
 import math
+from cloudant.design_document import DesignDocument, View
+from cloudant.query import Query
+from datetime import date, datetime
+
+import config
 
 # Connect to server
-conn = cloudant.Cloudant(
-    CLOUDANT_CONFIG['USER'],
-    CLOUDANT_CONFIG['PASS'],
-    url=CLOUDANT_CONFIG['HOST'],
-    connect=True
-)
+with open(config.cloudant_credentials_File, 'r') as f:
+    creds = json.load(f)
+    conn = cloudant.Cloudant(
+        creds['username'],
+        creds['password'],
+        url='https://' + creds['host'],
+        connect=True
+    )
 db = conn['sentiments']
 
 # query view

@@ -1,17 +1,17 @@
 """ Gets tweets about top 25 coins, analyzes, and saves analysis """
 
-import config
-from config import TWEEPY_CONFIG, CLOUDANT_CONFIG
-import csv
-from unidecode import unidecode
-import re
-import tweepy
-from tweepy import OAuthHandler
-from datetime import datetime
-from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 import cloudant
-
+import csv
+import re
 import time
+import tweepy
+from datetime import datetime
+import json
+from tweepy import OAuthHandler
+from unidecode import unidecode
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+
+import config
 
 # Function defs
 
@@ -38,31 +38,37 @@ def search_and_analyze(api, analyzer, symb, name):
 
 
 # Load top 25 from file
-with open('top_25.csv', 'r') as f:
+with open(config.top25_save_file, 'r') as f:
     freader = csv.reader(f)
     top_25 = [(row[0], row[1]) for row in freader]
 
 # Authorize tweepy
-auth = OAuthHandler(
-    TWEEPY_CONFIG['CONSUMER_KEY'],
-    TWEEPY_CONFIG['CONSUMER_SECRET']
-)
-auth.set_access_token(
-    TWEEPY_CONFIG['ACCESS_TOKEN'],
-    TWEEPY_CONFIG['ACCESS_TOKEN_SECRET']
-)
+with open(config.tweepy_credentials_file, 'r') as f:
+    creds = json.load(f)
+    auth = OAuthHandler(
+        creds['consumerKey'],
+        creds['consumerSecret']
+    )
+    auth.set_access_token(
+        creds['accessToken'],
+        creds['accessTokenSecret']
+    )
+
 api = tweepy.API(auth)
 
 # Instantiate analyzer
 analyzer = SentimentIntensityAnalyzer()
 
 # Connect to database
-conn = cloudant.Cloudant(
-    CLOUDANT_CONFIG['USER'],
-    CLOUDANT_CONFIG['PASS'],
-    url=CLOUDANT_CONFIG['HOST'],
-    connect=True
-)
+with open(config.cloudant_credentials_File, 'r') as f:
+    creds = json.load(f)
+    conn = cloudant.Cloudant(
+        creds['username'],
+        creds['password'],
+        url='https://' + creds['host'],
+        connect=True
+    )
+
 db = conn['sentiments']
 
 total = 0
@@ -87,10 +93,10 @@ for coin in top_25:
         tweet_doc = db.create_document(data)
         dt = datetime.utcnow()
         if tweet_doc.exists():
-            print('[{}] SUCCESS'.format(str(dt)))
-            total += 1
+            print('[{}] SUCCESS.'.format(str(dt)))
         else:
-            print('[{}] FAIL'.format(str(dt)))
+            print('[{}] FAIL.'.format(str(dt)))
+        total += 1
 
 dt = datetime.utcnow()
 print('[{}] Total records inserted: {}'.format(str(dt), str(total)))
