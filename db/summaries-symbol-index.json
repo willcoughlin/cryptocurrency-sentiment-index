@@ -1,0 +1,12 @@
+{
+   "index": {
+      "fields": [
+         {
+            "name": "symbol",
+            "type": "string"
+         }
+      ]
+   },
+   "name": "symbol-text",
+   "type": "text"
+}
