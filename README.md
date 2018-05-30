@@ -1,5 +1,5 @@
 # Cryptocurrency Sentiment Index
-Track cryptocurrencies' price movements against the sentiments of Twitter users.
+Track cryptocurrency price movements against the sentiments of Twitter users.
 
 ## */ccsi*
 This respository is composed of a few subprojects.

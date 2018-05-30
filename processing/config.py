@@ -1,6 +1,6 @@
 """ Sets values for data file paths and provides logging config """
 
-top25_save_file = 'top_25.csv'
+top_20_save_file = 'top_20.csv'
 cloudant_credentials_File = 'credentials/cloudant.credentials.json'
 tweepy_credentials_file = 'credentials/tweepy.credentials.json'
 

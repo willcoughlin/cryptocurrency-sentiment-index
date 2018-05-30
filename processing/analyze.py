@@ -43,9 +43,9 @@ def main():
     config.configure_logging('analyze.log')
     
     # Load top 25 from file
-    with open(config.top25_save_file, 'r') as f:
+    with open(config.top_20_save_file, 'r') as f:
         freader = csv.reader(f)
-        top_25 = [(row[0], row[1]) for row in freader]
+        top_20 = [(row[0], row[1]) for row in freader]
 
     # Authorize tweepy
     with open(config.tweepy_credentials_file, 'r') as f:
@@ -77,7 +77,7 @@ def main():
     db = conn['sentiments']
 
     total = 0
-    for coin in top_25:
+    for coin in top_20:
         symb = coin[0]
         name = coin[1]
         # search for and analyze tweets regarding current currency

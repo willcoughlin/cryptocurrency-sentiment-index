@@ -8,8 +8,8 @@ from cloudant.query import Query
 from datetime import date
 
 def create_summaries(conn):
-    """ 
-    Get summary statistics from a view in the sentiments db and update the 
+    """
+    Get summary statistics from a view in the sentiments db and update the
     summaries db.
     """
 
@@ -17,7 +17,7 @@ def create_summaries(conn):
     logging.info('Querying database for summary...')
 
     db = conn['sentiments']
-    ddoc = DesignDocument(db, '_design/statsDesignDoc')
+    ddoc = DesignDocument(db, '_design/summary')
     ddoc.fetch()
     view = ddoc.get_view('summary-view')
     view_results = view(group=True)['rows']
@@ -30,56 +30,29 @@ def create_summaries(conn):
         symbol = view_result['key']
         unix_date = int(time.mktime(date.today().timetuple()))
 
-
-        # query for existing summary record
+        # query for today's summary record
         query = Query(
             db, 
-            fields=['_id', 'symbol', 'summary'],
-            selector={ 'symbol': { '$eq': symbol }}
+            fields=['_id', 'symbol', 'date', 'summary'],
+            selector={
+                'symbol': { '$eq': symbol },
+                'date': { '$eq': unix_date }
+            }
         )
         if query.result[0]:
-            # Updating an existing summary
+            # A record for today already exists so overwrite it. This should not normally happen.
             record = db[query.result[0][0]['_id']]
             summary = record['summary']
-            
-            # check that summary is new
-            if record['date'] == unix_date:
-                logging.info('Record for %s is current - SKIPPING.', symbol)
-            else:
-                logging.info('Updating summary for %s', symbol)
 
-                today_summary = view_result['value']
-
-                # update sample size
-                summary['sampleSize'] += today_summary['sampleSize']
-
-                # add sums
-                summary['sum'] += today_summary['sum']
-                summary['sumSq'] += today_summary['sumSq']
-
-                # update min/max if needed
-                if today_summary['min'] < summary['min']:
-                    summary['min'] = today_summary['min']
-                if today_summary['max'] > summary['max']:
-                    summary['max'] = today_summary['max']
-
-                # update mean
-                summary['mean'] = summary['sum'] / summary['sampleSize']
-
-                # update variance
-                sst = summary['sumSq'] - summary['sum']**2 / summary['sampleSize']
-                variance = sst / (summary['sampleSize'] - 1)
-                summary['stdDev'] = math.sqrt(variance)
-
-                # save changes
-                summary.save()
-                logging.info('Finished updating summary.')
+            logging.info('Updating summary for %s', symbol)
+            record['summary'] = view_result['value']
+            summary.save()
         else:
             # Creating a new summary
             logging.info('Creating summary for %s...', symbol)
             data = {
-                'date': unix_date,
                 'symbol': symbol,
+                'date': unix_date,
                 'summary': view_result['value']
             }
             new_summary = db.create_document(data)

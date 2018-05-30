@@ -6,7 +6,7 @@ import sys
 from cloudant.design_document import DesignDocument
 
 import config
-import top_25
+import top_20
 import summary
 
 def check_db(conn, name):
@@ -22,7 +22,7 @@ def check_db(conn, name):
 def create_db_sentiments(conn):
     """ Make "sentiments" database """
 
-    logging.info('Database does not exist. Creating...')
+    logging.info('Creating database "sentiments"...')
     db_sentiments = conn.create_database('sentiments')
     logging.info('Done creating database.')
 
@@ -112,8 +112,8 @@ def main():
         logging.info('Finished deleting database.')
     create_db_sentiments(conn)
 
-    # Update top 25 file
-    top_25.get_top_25()
+    # Update top 20 file
+    top_20.get_top_20()
 
     logging.info('Finished preparation of databases.')
     logging.info('Ready for sentiment records.')

@@ -1,0 +1,4 @@
+vscode-requirements.txt
+*.pyc
+__pycache__
+.vscode
