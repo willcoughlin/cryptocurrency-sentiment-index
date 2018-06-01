@@ -17,9 +17,10 @@ class NavBar extends React.Component {
 
   render() {
     return (
-      <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <nav className="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-light fixed-top">
         <button name="Back to Top" className="btn btn-link navbar-brand mb-0 h1" onClick={() => this._smoothScroll(0)}>
-          Cryptocurrency Sentiment Index
+          <span className="d-none d-sm-block">Cryptocurrency Sentiment Index</span>
+          <span className="d-sm-none">CCSI</span>
         </button>
         {/* Nav button that will show on narrow screens */}
         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" onClick={this._handleNavBarTogglerClick.bind(this)}>

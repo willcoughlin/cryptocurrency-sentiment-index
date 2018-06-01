@@ -10,37 +10,62 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      hasError: false,
+      error : null,
       tickers: null,
-      marketData: null
+      //marketData: null
+      cryptoData: null
     }
   }
 
   componentDidMount() {
-    const url = 'https://api.coinmarketcap.com/v2/ticker/?limit=10';
+    const url = 'https://ccsi-api.mybluemix.net/today';
     fetch(url)
-      .then(response => response.json())
-      .then(json => {
-        const tickers = [null, null, null, null, null, null, null, null, null, null];
-        const marketData = {};
-        for (let i in json.data) {
-          let cryptoData = json.data[i];
-          tickers[cryptoData.rank - 1] = cryptoData.symbol;
-          marketData[cryptoData.symbol] = cryptoData;
+      .then(response => {
+        if (!response.ok) {
+          this.setState({
+            hasError: true, 
+            error: { status: response.status, statusText: response.statusText }
+          });
+          throw new Error();
+          return;
+        } else {
+          return response.json();
         }
-        this.setState({tickers: tickers, marketData: marketData});
+      })
+      .then(json => {
+        const tickers = []
+        const cryptoData = {}
+        for (let i of json) {
+          tickers.push(i.symbol);
+          cryptoData[i.symbol] = i
+        }
+        this.setState({tickers: tickers, cryptoData: cryptoData});
       });
   }
 
   render() {
     if (!this.state.tickers) {
-      return <LoadingIndicator />
+      if (this.state.hasError) {
+        {/* TODO: refactor this into a component */}        
+        return (
+          <div id="error-container">
+            <h1>Uh-oh!</h1>
+            <h2>Error {this.state.error.status} - {this.state.error.statusText}</h2>
+          </div>
+        );
+      } else {
+        return <LoadingIndicator />;
+      }
     } else {
       return (
         <div>
           <NavBar tickers={this.state.tickers} />
           <div id="card-list">
-            <h1 className="text-center mb-4">Top Ten Coins by Market Cap</h1>
-            {this.state.tickers.map(t => <CryptoCard key={'card-' + t} marketData={this.state.marketData[t]} />)}
+            <h1 className="text-center mb-4 text-light">Top Ten Coins by Trading Volume</h1>
+            {/* {this.state.tickers.map(t => <CryptoCard key={'card-' + t} marketData={this.state.marketData[t]} />)} */}
+            {this.state.tickers.map(t => <CryptoCard key={'card-' + t} cryptoData={this.state.cryptoData[t]} />)}
+            
           </div>
         </div>
       );

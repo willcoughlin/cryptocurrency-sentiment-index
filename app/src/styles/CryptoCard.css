@@ -1,3 +1,7 @@
 .crypto-card {
   margin-bottom: 20px;
 }
+.crypto-card .text-muted {
+  color: rgb(162, 174, 185) !important;
+  /* color: white !important; */
+}

@@ -1,8 +1,20 @@
+@import url('https://fonts.googleapis.com/css?family=IBM+Plex+Mono');
+
 body {
   padding-left: 50px;
   padding-right: 50px;
+  background-color: rgb(64, 76, 88);
+  font-family: 'IBM Plex Mono', monospace;
 }
 
 #card-list {
   margin-top: 76px;
+}
+
+#error-container {
+  position: absolute;
+  top: 45%;
+  left: 0;
+  width: 100%;
+  text-align: center;
 }
