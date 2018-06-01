@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, abort
 from flask_caching import Cache
+from flask_cors import CORS
 import requests
 import json
 import sys
@@ -17,6 +18,7 @@ port = int(os.getenv('PORT', 8000))
 
 app = Flask(__name__)
 cache = Cache(app,config={'CACHE_TYPE': 'simple'})  
+CORS(app)
 try:
     with open('cloudant.credentials.json', 'r') as f:
         db_creds = json.load(f)
