@@ -1,10 +1,10 @@
 import React from 'react';
 
-import '../styles/App.css';
+import './App.css';
 
-import NavBar from './NavBar';
-import CryptoCard from './CryptoCard';
-import LoadingIndicator from './LoadingIndicator';
+import NavBar from '../NavBar/NavBar';
+import CryptoCard from '../CryptoCard/CryptoCard';
+import LoadingIndicator from '../LoadingIndicator/LoadingIndicator';
 
 class App extends React.Component {
   constructor(props) {
