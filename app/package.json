@@ -39,7 +39,9 @@
     ]
   },
   "dependencies": {
+    "moment": "^2.22.2",
     "react": "^16.3.2",
-    "react-dom": "^16.3.2"
+    "react-dom": "^16.3.2",
+    "react-stockcharts": "^0.7.6"
   }
 }
