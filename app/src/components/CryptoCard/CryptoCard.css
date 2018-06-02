@@ -5,3 +5,10 @@
   color: rgb(162, 174, 185) !important;
   /* color: white !important; */
 }
+
+.chart-row {
+  margin:5px;
+}
+.chart-container {
+  padding-top: 15px;
+}

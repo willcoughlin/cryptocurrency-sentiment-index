@@ -1,0 +1,15 @@
+.react-stockcharts-tooltip, 
+.react-stockcharts-labelannotation text {
+    font-family: 'IBM Plex Mono', monospace;
+}
+.react-stockcharts-tooltip {
+    fill: rgb(162, 174, 185);    
+}
+.react-stockcharts-labelannotation text {
+    fill: rgb(248, 249, 250);
+    font-size: 1rem;
+}
+
+.react-stockcharts-avoid-interaction g {
+    clip-path: none !important;
+}
