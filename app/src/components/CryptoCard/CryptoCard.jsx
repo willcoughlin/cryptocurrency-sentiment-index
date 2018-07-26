@@ -21,6 +21,8 @@ class CryptoCard extends React.Component {
     });
 
     const candlestickData = this.props.cryptoData.priceHistorical.map(mapCandlestickData);
+
+    // TODO: stop doing this or find a better way to pad left and right side
     candlestickData.unshift({
       date: moment(candlestickData[0].date).subtract(1, 'hour').toDate(),
       high: undefined,
@@ -39,6 +41,7 @@ class CryptoCard extends React.Component {
     });
 
     this.state = {
+      // TODO: with api change, chartDisplay could be 'week' instead
       chartDisplay: 'day',
       candlestickData: candlestickData
     }

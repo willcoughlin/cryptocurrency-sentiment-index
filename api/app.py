@@ -36,7 +36,10 @@ def today():
     Returns sentiments and price data for top ten coins.
     """
     current_url = 'https://min-api.cryptocompare.com/data/pricemultifull'
-    historical_url = 'https://min-api.cryptocompare.com/data/histohour'
+
+    # TODO: update to use histoday api
+    # historical_url = 'https://min-api.cryptocompare.com/data/histohour'
+    historical_url = 'https://min-api.cryptocompare.com/data/histoday'
 
     try:
         today_summary = _get_today_summary()
@@ -54,6 +57,7 @@ def today():
             symbol = c['CoinInfo']['Name']
             name = c['CoinInfo']['FullName']
 
+            # TODO: change this to daily
             # get hourly price data
             historical_prices_get = requests.get(historical_url, {
                 'fsym': symbol,
