@@ -45,7 +45,7 @@ class CandlestickChart extends React.Component {
       fill: greenOrRed,
       stroke: greenOrRed,
       candleStrokeWidth: 1,
-      widthRatio: 0.8,
+      widthRatio: 0.5,
       opacity: 1,
     };
 
@@ -62,6 +62,7 @@ class CandlestickChart extends React.Component {
           width={width}
           ratio={1}
           margin={margin}
+          padding={{left: 100, right: 100}}
           type="svg"
           seriesName={this.props.symbol}
           data={data}
@@ -79,7 +80,7 @@ class CandlestickChart extends React.Component {
             padding={{ top: 40, bottom: 20 }}
           >
             <XAxis axisAt="bottom" orient="bottom" stroke="#fff" tickStroke="#fff" />
-					  <YAxis axisAt="left" orient="left" stroke="#fff" tickStroke="#fff" ticks={5} />
+					  <YAxis axisAt="left" orient="left" stroke="#fff" tickStroke="#fff" />
 
             <Label 
               x={(width - margin.left - margin.right) / 2} 
