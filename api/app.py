@@ -29,14 +29,15 @@ except Exception as err:
 # Routes
 # ----------------------------------------------------------------------------
 
-@app.route('/today')
+@app.route('/getdata')
 @cache.cached(timeout=300)
-def today():
+def get_data():
     """
     Returns sentiments and price data for top ten coins.
     """
     current_url = 'https://min-api.cryptocompare.com/data/pricemultifull'
-    historical_url = 'https://min-api.cryptocompare.com/data/histohour'
+
+    historical_url = 'https://min-api.cryptocompare.com/data/histoday'
 
     try:
         today_summary = _get_today_summary()
@@ -54,11 +55,10 @@ def today():
             symbol = c['CoinInfo']['Name']
             name = c['CoinInfo']['FullName']
 
-            # get hourly price data
             historical_prices_get = requests.get(historical_url, {
                 'fsym': symbol,
                 'tsym': 'USD',
-                'limit': datetime.now().hour
+                'limit': 30 # 30 days
             })
 
             # get today summary for symbol
@@ -101,7 +101,7 @@ def _get_top_10():
 def _get_today_summary():
     req_url = 'https://' + db_creds['host'] + '/sentiments/_design/summary/_view/summary-view'
     req_params = { 'reduce': True, 'group': True }
-    req_auth = (db_creds['key'], db_creds['password'])
+    req_auth = (db_creds['username'], db_creds['password'])
     r = requests.get(req_url, params=req_params, auth=req_auth)
     return r.json()['rows']
 
