@@ -5,8 +5,9 @@ import requests
 import json
 import sys
 import os
+import time
 
-from datetime import datetime
+from datetime import datetime, date, timedelta
 
 # ----------------------------------------------------------------------------
 # App configuration
@@ -29,14 +30,15 @@ except Exception as err:
 # Routes
 # ----------------------------------------------------------------------------
 
-@app.route('/today')
+@app.route('/getdata')
 @cache.cached(timeout=300)
-def today():
+def get_data():
     """
     Returns sentiments and price data for top ten coins.
     """
     current_url = 'https://min-api.cryptocompare.com/data/pricemultifull'
-    historical_url = 'https://min-api.cryptocompare.com/data/histohour'
+
+    historical_url = 'https://min-api.cryptocompare.com/data/histoday'
 
     try:
         today_summary = _get_today_summary()
@@ -54,11 +56,10 @@ def today():
             symbol = c['CoinInfo']['Name']
             name = c['CoinInfo']['FullName']
 
-            # get hourly price data
             historical_prices_get = requests.get(historical_url, {
                 'fsym': symbol,
                 'tsym': 'USD',
-                'limit': datetime.now().hour
+                'limit': 30 # 30 days
             })
 
             # get today summary for symbol
@@ -73,15 +74,21 @@ def today():
             })
             top_10_symbols.append(symbol)
 
+        # get historical sentiments
+        past_month_stamp = time.mktime((date.today() - timedelta(days=31)).timetuple())
+        historical_summaries = _get_historical_summaries(past_month_stamp, top_10_symbols)
+
         current_prices_get = requests.get(current_url, {
             'fsyms': ','.join(top_10_symbols), 
             'tsyms': 'USD'
         })
 
+        # get current prices
         current_prices_data = current_prices_get.json()['RAW']
 
         for c in result:
             c['priceCurrent'] = current_prices_data[c['symbol']]['USD']
+            c['sentimentHistorical'] = historical_summaries[c['symbol']]
 
         return jsonify(result)
 
@@ -101,9 +108,19 @@ def _get_top_10():
 def _get_today_summary():
     req_url = 'https://' + db_creds['host'] + '/sentiments/_design/summary/_view/summary-view'
     req_params = { 'reduce': True, 'group': True }
-    req_auth = (db_creds['key'], db_creds['password'])
+    req_auth = (db_creds['username'], db_creds['password'])
     r = requests.get(req_url, params=req_params, auth=req_auth)
     return r.json()['rows']
+
+def _get_historical_summaries(limit, syms):
+    req_url = 'https://' + db_creds['host'] + '/summaries/_design/timeseries/_view/means'
+    req_params = { 'reduce': True, 'group': True }
+    req_auth = (db_creds['username'], db_creds['password'])
+    r = requests.get(req_url, params=req_params, auth=req_auth)
+    unfiltered = r.json()['rows']
+
+    # subtract 5 hr in seconds here from timestamp
+    return { i['key']: { pt['date'] - 18000: pt['mean'] for pt in i['value'] } for i in unfiltered if i['key'] in syms }
 
 # ----------------------------------------------------------------------------
 
