@@ -21,25 +21,9 @@ class CryptoCard extends React.Component {
     });
 
     const candlestickData = this.props.cryptoData.priceHistorical.map(mapCandlestickData);
-    candlestickData.unshift({
-      date: moment(candlestickData[0].date).subtract(1, 'hour').toDate(),
-      high: undefined,
-      low: undefined,
-      open: undefined,
-      close: undefined,
-      volume: undefined
-    });
-    candlestickData.push({
-      date: moment(candlestickData[candlestickData.length - 1].date).add(1, 'hour').toDate(),
-      high: undefined,
-      low: undefined,
-      open: undefined,
-      close: undefined,
-      volume: undefined
-    });
 
     this.state = {
-      chartDisplay: 'day',
+      chartDisplay: 'month',
       candlestickData: candlestickData
     }
   }

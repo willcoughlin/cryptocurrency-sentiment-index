@@ -1,7 +1,7 @@
 ## Overview
 These scripts perform the real data collection and processing. Here are some bullet points going over the important details:
 
-* A ranking of the top 25 cryptocurrencies by market cap is retrieved with [coinmarketcap](https://github.com/barnumbirr/coinmarketcap).
+* A ranking of the top 20 cryptocurrencies by market cap is retrieved with [CryptoCompare](https://min-api.cryptocompare.com/).
 * Tweets about cryptocurrencies are fetched from Twitter with [tweepy](http://www.tweepy.org/).
 * The sentiments of the tweets are computed by the [vaderSentiment](https://github.com/cjhutto/vaderSentiment) library.
 * Sentiments and summary statistics about a cryptocurrency sentiments are stored on a Cloudant server, accessed with the [cloudant](https://github.com/cloudant/python-cloudant) library.
@@ -27,14 +27,14 @@ Frequency: *Daily @ 11:55 PM*
     
     b. Add or update the currency's record in the "summaries" database.
     
-3. Using the `coinmarketcap` package, get a listing of the top 25 cryptocurrencies by market cap.
+3. Using the CryptoCompare API, get a listing of the top 20 cryptocurrencies by market cap.
 
 4. Save this list to a file.
 
 ### Analyze
 Frequency: *Every 30 minutes*
 #### Subtasks
-1. Read top_25.csv to get list of currencies for querying Twitter.
+1. Read top_20.csv to get list of currencies for querying Twitter.
 
 2. For each currency:
     
