@@ -37,7 +37,7 @@ class CryptoCard extends React.Component {
       { key: 'Mkt Cap', val: data.priceCurrent.MKTCAP }
     ];
 
-    console.log(this.state.candlestickData);
+    //console.log(this.state.candlestickData);
 
     return (
       <div className="card bg-dark text-light border-light crypto-card" id={data.symbol}>

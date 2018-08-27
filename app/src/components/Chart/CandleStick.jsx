@@ -85,7 +85,7 @@ class CandlestickChart extends React.Component {
             <Label 
               x={(width - margin.left - margin.right) / 2} 
               y={height - 20} 
-              text="Time (UTC)" />
+              text="Date" />
 
             <Label x={-70} y={height / 2}
               rotate={-90}

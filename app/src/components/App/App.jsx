@@ -19,8 +19,8 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    //const url = 'https://ccsi-api.mybluemix.net/getdata';
-    const url = 'http://localhost:8000/getdata';
+    const url = 'https://ccsi-api.mybluemix.net/getdata';
+    // const url = 'http://localhost:8000/getdata';
     fetch(url)
       .then(response => {
         if (!response.ok) {
