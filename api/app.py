@@ -108,14 +108,14 @@ def _get_top_10():
 def _get_today_summary():
     req_url = 'https://' + db_creds['host'] + '/sentiments/_design/summary/_view/summary-view'
     req_params = { 'reduce': True, 'group': True }
-    req_auth = (db_creds['username'], db_creds['password'])
+    req_auth = (db_creds['key'], db_creds['password'])
     r = requests.get(req_url, params=req_params, auth=req_auth)
     return r.json()['rows']
 
 def _get_historical_summaries(limit, syms):
     req_url = 'https://' + db_creds['host'] + '/summaries/_design/timeseries/_view/means'
     req_params = { 'reduce': True, 'group': True }
-    req_auth = (db_creds['username'], db_creds['password'])
+    req_auth = (db_creds['key'], db_creds['password'])
     r = requests.get(req_url, params=req_params, auth=req_auth)
     unfiltered = r.json()['rows']
 
