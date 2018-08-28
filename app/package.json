@@ -39,9 +39,10 @@
     ]
   },
   "dependencies": {
+    "chart.js": "^2.7.2",
     "moment": "^2.22.2",
     "react": "^16.3.2",
-    "react-dom": "^16.3.2",
-    "react-stockcharts": "^0.7.7"
+    "react-chartjs-2": "^2.7.4",
+    "react-dom": "^16.3.2"
   }
 }
