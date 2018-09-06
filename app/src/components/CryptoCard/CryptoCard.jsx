@@ -2,39 +2,38 @@ import React from 'react';
 import moment from 'moment';
 
 import './CryptoCard.css';
-import LoadingIndicator from '../LoadingIndicator/LoadingIndicator';
 import CryptoCardSentimentPanel from './SentimentPanel'
 import CryptoCardPricePanel from './PricePanel'
-//import CandlestickChart from '../Chart/CandleStick'
 import SPChart from '../Chart/SPChart';
 
 class CryptoCard extends React.Component {
   constructor(props) {
     super(props);
 
-    const mapCandlestickData = item => ({
-      date: new Date(item.time * 1000),
-      high: item.high,
-      low: item.low,
-      open: item.open,
-      close: item.close,
-      volume: item.volumeto
-    });
-
     const mapPriceData = item => ({
-      //x: new Date(item.time * 1000),
       x: item.time * 1000,
       y: item.close
     })
+    const mapSentimentData = item => ({
+      x: item * 1000,
+      y: this.props.cryptoData.sentimentHistorical[item]
+    });
 
-    const candlestickData = this.props.cryptoData.priceHistorical.map(mapCandlestickData);
-    const priceData = this.props.cryptoData.priceHistorical.map(mapPriceData); 
+    const priceData = this.props.cryptoData.priceHistorical.map(mapPriceData);
+
+    let sentimentDataKeys = Object.keys(this.props.cryptoData.sentimentHistorical);
+    sentimentDataKeys = sentimentDataKeys.slice(sentimentDataKeys.length - 30);
+    const sentimentData = sentimentDataKeys.map(mapSentimentData);
+    sentimentData.push({
+      x: priceData[priceData.length - 1].x,
+      y: this.props.cryptoData.sentimentToday.mean
+    });
 
     this.state = {
       chartDisplay: 'month',
-      candlestickData: candlestickData,
-      priceData: priceData
-    }
+      priceData: priceData,
+      sentimentData: sentimentData
+    };
   }
 
   render () {
@@ -45,8 +44,6 @@ class CryptoCard extends React.Component {
       { key: '24h Vol', val: data.priceCurrent.VOLUME24HOURTO },
       { key: 'Mkt Cap', val: data.priceCurrent.MKTCAP }
     ];
-
-    //console.log(this.state.candlestickData);
 
     return (
       <div className="card bg-dark text-light border-light crypto-card" id={data.symbol}>
@@ -61,7 +58,6 @@ class CryptoCard extends React.Component {
               <CryptoCardSentimentPanel sentimentData={data.sentimentToday} />
             </div>
             <div className="col-md-6">
-              {/* TODO: rename priceCurrent property to priceToday */}
               <CryptoCardPricePanel priceData={data.priceCurrent} />
             </div>
           </div>
@@ -69,14 +65,9 @@ class CryptoCard extends React.Component {
           {/* Chart */}
           <div className="row schart-row">
             <div className="col-md-12 chart-container border-top border-light">
-              {/* <CandlestickChart 
-                symbol={data.symbol} 
-                candlestickData={this.state.candlestickData}/> */}
-              
-              <SPChart symbol={data.symbol} 
-                priceData={this.state.priceData} 
-                sentimentData={[4,5,6]} /> 
-
+              <SPChart symbol={data.symbol}
+                priceData={this.state.priceData}
+                sentimentData={this.state.sentimentData} />
             </div>
           </div>
         </div>
