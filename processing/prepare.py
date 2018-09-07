@@ -73,6 +73,9 @@ def create_db_summaries(conn):
             fields=index_fields
         )
         index.create()
+
+        # TODO: create date index and timeseries view
+
     logging.info('Finished creating indexes.')
     
 def main():

@@ -1,0 +1,18 @@
+{
+    "id": "_design/timeseries",
+    "key": "_design/timeseries",
+    "value": {
+     "rev": "32-9ef0746abe9c3beb09d295b29d024e1f"
+    },
+    "doc": {
+     "_id": "_design/timeseries",
+     "_rev": "32-9ef0746abe9c3beb09d295b29d024e1f",
+     "views": {
+      "means": {
+       "map": "function (doc) {\n  emit(doc.symbol, { date: doc.date, mean: doc.summary.mean });\n}",
+       "reduce": "function (keys, values, rereduce) {\n  var series = [];\n  \n  if (rereduce) {\n    for (var i in values) {\n      for (var j in values[i]) {\n        series.push(values[i][j]);\n      }\n    }\n  } else {\n    for (var i in values) {\n      series.push(values[i]);\n    }\n  }\n  \n  return series;\n}"
+      }
+     },
+     "language": "javascript"
+    }
+   }
