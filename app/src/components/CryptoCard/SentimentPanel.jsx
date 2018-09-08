@@ -7,8 +7,10 @@ class CryptoCardSentimentPanel extends React.Component {
       const sentiment = mean >= 0.05 ? 'Positive': mean <= -0.05 ? 'Negative' : 'Neutral'; 
       const stdDev = this.props.sentimentData.stdDev.toFixed(4);
       const sampleSize = this.props.sentimentData.sampleSize;
-      // TODO: get change pct for the day
-      const changePct = null;
+
+      const today = this.props.sentimentData.mean;
+      const yesterday = this.props.sentimentData.yesterday;
+      const changePct = ((today - yesterday) / yesterday * 100).toFixed(4);  
   
       return (
         <div className="card bg-dark border-dark">
@@ -41,7 +43,7 @@ class CryptoCardSentimentPanel extends React.Component {
                   : changePct < 0 ? 'text-danger' 
                   : 'text-muted' 
                 }>
-                  {changePct || '-'}%
+                  {changePct}%
                 </span>
               </div>
             </div>

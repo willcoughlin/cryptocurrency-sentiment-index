@@ -45,6 +45,11 @@ class CryptoCard extends React.Component {
       { key: 'Mkt Cap', val: data.priceCurrent.MKTCAP }
     ];
 
+    const sentimentCardData = data.sentimentToday;
+    const sentimentDataKeys = Array.sort(Object.keys(this.state.sentimentData));
+    const yesterdayKey = sentimentDataKeys[sentimentDataKeys.length - 2];
+    sentimentCardData.yesterday = this.state.sentimentData[yesterdayKey].y;
+
     return (
       <div className="card bg-dark text-light border-light crypto-card" id={data.symbol}>
         <div className="card-header text-center border-light">
