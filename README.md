@@ -4,6 +4,9 @@ Track cryptocurrency price movements against the sentiments of Twitter users.
 ## */ccsi*
 This respository is composed of a few subprojects.
 
+### *[/ccsi/analysis](analysis)*
+Analysis and evaluation of our results.
+
 ### *[/ccsi/api](api)*
 The web backend, developed with Python and Flask.
 
