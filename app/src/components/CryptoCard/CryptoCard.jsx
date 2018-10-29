@@ -46,7 +46,7 @@ class CryptoCard extends React.Component {
     ];
 
     const sentimentCardData = data.sentimentToday;
-    const sentimentDataKeys = Array.sort(Object.keys(this.state.sentimentData));
+    const sentimentDataKeys = Object.keys(this.state.sentimentData).sort();
     const yesterdayKey = sentimentDataKeys[sentimentDataKeys.length - 2];
     sentimentCardData.yesterday = this.state.sentimentData[yesterdayKey].y;
 
