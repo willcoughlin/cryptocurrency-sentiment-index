@@ -63,7 +63,10 @@ def get_data():
             })
 
             # get today summary for symbol
-            summary_row = next((i for i in today_summary if i['key'] == symbol))
+            if (symbol not in today_summary):
+                continue
+
+            summary_row = today_summary[symbol]
             sentiment_today = summary_row['value']
 
             result.append({
@@ -92,7 +95,7 @@ def get_data():
 
         return jsonify(result)
 
-    except:
+    except Exception:
         return abort(500)
         
 # ----------------------------------------------------------------------------
@@ -110,7 +113,7 @@ def _get_today_summary():
     req_params = { 'reduce': True, 'group': True }
     req_auth = (db_creds['key'], db_creds['password'])
     r = requests.get(req_url, params=req_params, auth=req_auth)
-    return r.json()['rows']
+    return {row['key']: row for row in r.json()['rows']}
 
 def _get_historical_summaries(limit, syms):
     req_url = 'https://' + db_creds['host'] + '/summaries/_design/timeseries/_view/means'
@@ -124,5 +127,5 @@ def _get_historical_summaries(limit, syms):
 
 # ----------------------------------------------------------------------------
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=port, debug=True)
+# if __name__ == '__main__':
+#     app.run(host='0.0.0.0', port=port, debug=True)
