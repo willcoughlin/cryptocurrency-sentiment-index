@@ -20,7 +20,6 @@ class App extends React.Component {
 
   componentDidMount() {
     const url = 'https://ccsi-api.mybluemix.net/getdata';
-    // const url = 'http://localhost:8000/getdata';
     fetch(url)
       .then(response => {
         if (!response.ok) {
@@ -48,7 +47,6 @@ class App extends React.Component {
   render() {
     if (!this.state.tickers) {
       if (this.state.hasError) {
-        {/* TODO: refactor this into a component */}        
         return (
           <div id="error-container">
             <h1>Uh-oh!</h1>
@@ -63,10 +61,8 @@ class App extends React.Component {
         <div>
           <NavBar tickers={this.state.tickers} />
           <div id="card-list">
-            <h1 className="text-center mb-4 text-light">Top Ten Coins by Trading Volume</h1>
-            {/* {this.state.tickers.map(t => <CryptoCard key={'card-' + t} marketData={this.state.marketData[t]} />)} */}
+            <h1 className="text-center mb-4 text-light">Top Coins by Trading Volume</h1>
             {this.state.tickers.map(t => <CryptoCard key={'card-' + t} cryptoData={this.state.cryptoData[t]} />)}
-            
           </div>
         </div>
       );

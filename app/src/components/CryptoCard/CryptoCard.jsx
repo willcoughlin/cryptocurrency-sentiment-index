@@ -1,5 +1,4 @@
 import React from 'react';
-import moment from 'moment';
 
 import './CryptoCard.css';
 import CryptoCardSentimentPanel from './SentimentPanel'
@@ -38,12 +37,6 @@ class CryptoCard extends React.Component {
 
   render () {
     const data = this.props.cryptoData;
-    const mktSummary = [
-      { key: 'Price', val: data.priceCurrent.PRICE },
-      { key: '24h Chg', val: data.priceCurrent.CHANGEPCT24HOUR },
-      { key: '24h Vol', val: data.priceCurrent.VOLUME24HOURTO },
-      { key: 'Mkt Cap', val: data.priceCurrent.MKTCAP }
-    ];
 
     const sentimentCardData = data.sentimentToday;
     const sentimentDataKeys = Object.keys(this.state.sentimentData).sort();
