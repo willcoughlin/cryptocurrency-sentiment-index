@@ -4,7 +4,7 @@ cloudant==2.8.1
 idna==2.6
 oauthlib==2.0.7
 PySocks==1.6.8
-requests==2.18.4
+requests==2.20.0
 requests-cache==0.4.13
 requests-oauthlib==0.8.0
 tweepy==3.6.0
