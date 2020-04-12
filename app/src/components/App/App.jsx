@@ -19,7 +19,8 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    const url = 'https://ccsi-api.mybluemix.net/getdata';
+    // const url = 'https://ccsi-api.mybluemix.net/getdata';
+    const url = 'https://ccsi-archive.s3.amazonaws.com/getdata.json';
     fetch(url)
       .then(response => {
         if (!response.ok) {
