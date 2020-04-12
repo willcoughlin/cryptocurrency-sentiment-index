@@ -13,7 +13,6 @@ class App extends React.Component {
       hasError: false,
       error : null,
       tickers: null,
-      //marketData: null
       cryptoData: null
     }
   }
@@ -28,7 +27,6 @@ class App extends React.Component {
             error: { status: response.status, statusText: response.statusText }
           });
           throw new Error();
-          return;
         } else {
           return response.json();
         }
@@ -59,6 +57,7 @@ class App extends React.Component {
     } else {
       return (
         <div>
+          
           <NavBar tickers={this.state.tickers} />
           <div id="card-list">
             <h1 className="text-center mb-4 text-light">Top Coins by Trading Volume</h1>
