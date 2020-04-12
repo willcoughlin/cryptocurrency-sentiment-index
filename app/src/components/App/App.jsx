@@ -5,6 +5,7 @@ import './App.css';
 import NavBar from '../NavBar/NavBar';
 import CryptoCard from '../CryptoCard/CryptoCard';
 import LoadingIndicator from '../LoadingIndicator/LoadingIndicator';
+import Footer from '../Footer/Footer';
 
 class App extends React.Component {
   constructor(props) {
@@ -57,12 +58,12 @@ class App extends React.Component {
     } else {
       return (
         <div>
-          
           <NavBar tickers={this.state.tickers} />
           <div id="card-list">
             <h1 className="text-center mb-4 text-light">Top Coins by Trading Volume</h1>
             {this.state.tickers.map(t => <CryptoCard key={'card-' + t} cryptoData={this.state.cryptoData[t]} />)}
           </div>
+          <Footer />
         </div>
       );
     }

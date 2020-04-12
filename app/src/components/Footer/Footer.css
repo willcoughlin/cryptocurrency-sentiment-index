@@ -1,0 +1,19 @@
+#footerContent {
+    background-color: orangered;
+    border-top: 1px solid darkred;
+    text-align: center;
+    padding: 18px;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    height: 60px;
+    width: 100%;
+    color: white;
+}
+
+#phantom {
+    display: block;
+    padding: 18px;
+    height: 60px;
+    width: 100%;
+}
