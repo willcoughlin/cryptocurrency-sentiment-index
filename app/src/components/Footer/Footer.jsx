@@ -7,7 +7,7 @@ class Footer extends React.Component {
             <>
             <div id='phantom'></div>
             <div id='footerContent'>
-                ⚠ As of April 13, 2020, this data is no longer up-to-date ⚠
+                ⚠ As of April 12, 2020, this data is no longer up-to-date ⚠
             </div>
             </>
         );
